@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Birthday Greetings For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soft-pink: #ffafbd;
+            --deep-purple: #9d50bb;
+            --pastel-pink: #fff0f5;
+            --aesthetic-purple: #6c5ce7;
+            --board-pink: #fbc531;
+            --youtube-red: #ff0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--soft-pink), var(--deep-purple));
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ✉️ ENVELOPE WRAPPER & ANIMATIONS */
+        .envelope-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-page.opened {
+            position: relative;
+            height: auto;
+            min-height: 100vh;
+            padding-top: 30px;
+            justify-content: flex-start;
+        }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
+            border-radius: 14px;
+            box-shadow: 0 20px 60px rgba(157, 80, 187, 0.3);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        .envelope.opened {
+            background: transparent;
+            box-shadow: none;
+            cursor: default;
+            width: 100%;
+            height: auto;
+            transform: none !important;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, #fce4ec 0%, #ffffff 100%);
+            border-radius: 14px 14px 0 0;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+        }
+
+        .envelope.opened .envelope-flap {
+            transform: rotateX(180deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: #ffffff;
+            border-radius: 0 0 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: opacity 0.4s ease;
+        }
+
+        .envelope.opened .envelope-body {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .open-btn {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--deep-purple);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hearts {
+            font-size: 1.5rem;
+        }
+
+        /* 🌸 FLOATING STICKERS */
+        .floating-stickers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .sticker {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            animation: floatUp 10s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* 🎬 PINK & PURPLE MEMORY BOARD CONTAINER */
+        .main-content {
+            width: 92%;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 30px 20px 40px;
+            opacity: 0;
+            transform: scale(0.1) translateY(200px);
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            position: absolute;
+            top: 50px;
+            z-index: 1;
+
+            /* Pastel Pink Felt Board Aesthetic */
+            background-color: #fce4ec; 
+            background-image: radial-gradient(rgba(157, 80, 187, 0.08) 15%, transparent 16%),
+                              radial-gradient(rgba(157, 80, 187, 0.08) 15%, transparent 16%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 8px;
+            border-radius: 24px;
+            box-shadow: inset 0 0 30px rgba(157, 80, 187, 0.15), 0 20px 50px rgba(0,0,0,0.25);
+            border: 8px solid #fff5f8;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            position: relative;
+            top: 0;
+        }
+
+        /* 📌 METALLIC PUSH PINS */
+        .pin {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: #e056fd; /* Vibrant Purple Pin */
+            border-radius: 50%;
+            z-index: 20;
+            box-shadow: 0 4px 5px rgba(0,0,0,0.2), inset -2px -2px 4px rgba(0,0,0,0.3);
+        }
+        .pin::after {
+            content: '';
+            position: absolute;
+            top: 13px;
+            left: 6px;
+            width: 2px;
+            height: 7px;
+            background: #ced4da;
+        }
+
+        .card:nth-child(even) .pin {
+            background: #ff79ff; /* Aesthetic Bright Pink Pin */
+        }
+        .youtube-player .pin {
+            background: #9b59b6; /* Rich Lavender Pin */
+            top: -14px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 🧩 THREE-COLUMN POLAROID GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+
+        /* Polaroid Frame with soft purple tinted paper texture */
+        .card {
+            position: relative;
+            background: #fff9fb;
+            padding: 8px 8px 38px 8px;
+            border-radius: 4px;
+            box-shadow: 3px 6px 15px rgba(157, 80, 187, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+        }
+
+        .card:nth-child(3n+1) { transform: rotate(-3deg); }
+        .card:nth-child(3n+2) { transform: rotate(2.5deg); }
+        .card:nth-child(3n+3) { transform: rotate(-1.5deg); }
+
+        .card:hover {
+            transform: scale(1.06) rotate(0deg) !important;
+            z-index: 10;
+            box-shadow: 5px 12px 25px rgba(157, 80, 187, 0.25);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            background: #fdf6fa;
+            border: 1px solid #f3e5f5;
+            border-radius: 2px;
+        }
+
+        .card-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Text directly on the polaroid frame margins */
+        .card-label {
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+
+        .trait-name {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            color: #6d214f; /* Romantic Deep Purple Ink */
+            font-size: 1.2rem;
+            letter-spacing: 0px;
+        }
+
+        /* 🎥 COMPACT POLAROID VIDEO PLAYER */
+        .youtube-player {
+            width: 95%;
+            max-width: 440px;
+            position: relative;
+            background: #fff9fb;
+            padding: 12px;
+            border-radius: 6px;
+            box-shadow: 4px 8px 25px rgba(157, 80, 187, 0.15);
+            margin: 0 auto 20px;
+            transform: rotate(1deg);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .youtube-player:hover {
+            transform: scale(1.03) rotate(0deg);
+            box-shadow: 5px 12px 30px rgba(157, 80, 187, 0.25);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #110216;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(17, 2, 22, 0.9));
+            padding: 15px 12px 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 15;
+        }
+
+        .video-container:hover .video-controls,
+        .video-container.playing .video-controls {
+            opacity: 1;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .play-pause-btn, .fullscreen-btn {
+            background: rgba(255, 240, 245, 0.95);
+            color: var(--deep-purple);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .play-pause-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .fullscreen-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .play-pause-btn:hover, .fullscreen-btn:hover {
+            background: #ffffff;
+            transform: scale(1.1);
+            color: #ff79ff;
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff79ff, #e056fd);
+            width: 0%;
+            border-radius: 2px;
+        }
+
+        .time-display {
+            color: #fbc531;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .video-title-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            color: white;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .video-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 8px rgba(17, 2, 22, 0.8);
+            background: linear-gradient(45deg, #ffb6c1, #e8a7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .center-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 240, 245, 0.7);
+            background: rgba(157, 80, 187, 0.2);
+            backdrop-filter: blur(15px);
+            color: #fff0f5;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 5;
+            opacity: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .video-container:not(.playing) .center-play-btn {
+            opacity: 1;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px 0 5px;
+            color: #6d214f;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.9rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.6);
+        }
+
+        .video-container:fullscreen .hero-video {
+            object-fit: contain;
+        }
+
+        /* Mobile Scale fine-tuning */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 25px 12px;
+                border: 6px solid #fff5f8;
+            }
+            .grid {
+                gap: 10px;
+            }
+            .card {
+                padding: 5px 5px 28px 5px;
+                border-radius: 3px;
+            }
+            .card-inner {
+                height: 85px;
+            }
+            .trait-name {
+                font-size: 0.95rem;
+            }
+            .card-label {
+                bottom: 4px;
+            }
+            .pin {
+                width: 11px;
+                height: 11px;
+                top: -9px;
+            }
+            .pin::after {
+                top: 10px;
+                left: 4px;
+                height: 6px;
+                width: 2px;
+            }
+            .youtube-player {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hidden audio track -->
+    <audio id="bgMusic" loop>
+        <source src="HBD.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="envelope-page" id="envelopePage">
+        
+        <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body">
+                <div class="open-btn">
+                    <span class="hearts"></span>
+                    Open Me
+                    <span class="hearts">🌸</span>
+                </div>
+            </div>
+            
+            <div class="main-content" id="mainContent">
+                <div class="floating-stickers" id="stickerContainer"></div>
+
+                <!-- 🧩 Photo Grid (Words are on pinkish/white Polaroid margins) -->
+                <div class="grid">
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo1.jpg" alt="Happy">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">Happy</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo2.jpg" alt="23rd">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">23rd</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo3.jpg" alt="Birthday">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">Birthday</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo5.jpg" alt="Agapi Mou">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">Agapi Mou</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo4.jpg" alt="Lesly">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">Lesly</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="pin"></div>
+                        <div class="card-inner">
+                            <img class="card-media" src="photo7.jpg" alt="Rose">
+                        </div>
+                        <div class="card-label">
+                            <div class="trait-name">Rose</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🎥 Pinned Video Tape Player Frame -->
+                <div class="youtube-player">
+                    <div class="pin"></div>
+                    <div class="video-container" id="videoContainer">
+                        <video class="hero-video" id="heroVideo" muted loop playsinline preload="metadata">
+                            <source src="video1.mp4" type="video/mp4">
+                        </video>
+                        
+                        <button class="center-play-btn" onclick="toggleVideo()">▶️</button>
+                        
+                        <div class="video-title-overlay">
+                            <h1 class="video-title">Kalos Kagathos</h1>
+                        </div>
+                        
+                        <div class="video-controls">
+                            <div class="control-row">
+                                <button class="play-pause-btn" id="playPauseBtn" onclick="toggleVideo()">▶️</button>
+                                
+                                <div class="progress-container" id="progressContainer">
+                                    <div class="progress-bar" id="progressBar"></div>
+                                </div>
+                                
+                                <div class="time-display">
+                                    <span id="currentTime">0:00</span>
+                                </div>
+
+                                <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    Loving You Since ❤️
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const envelopePage = document.getElementById('envelopePage');
+            const mainContent = document.getElementById('mainContent');
+            const bgMusic = document.getElementById('bgMusic');
+            
+            if(envelope.classList.contains('opened')) return;
+
+            envelope.classList.add('opened');
+            
+            bgMusic.play().catch(() => {
+                console.log('Music autoplay blocked');
+            });
+            
+            setTimeout(() => {
+                envelopePage.classList.add('opened');
+                mainContent.classList.add('visible');
+            }, 400);
+            
+            initFloatingStickers();
+        }
+
+        // Custom Video Elements Layout Controls
+        const videoContainer = document.getElementById('videoContainer');
+        const heroVideo = document.getElementById('heroVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const currentTimeEl = document.getElementById('currentTime');
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleVideo() {
+            if (heroVideo.paused) {
+                heroVideo.play();
+                playPauseBtn.textContent = '⏸️';
+                videoContainer.classList.add('playing');
+            } else {
+                heroVideo.pause();
+                playPauseBtn.textContent = '▶️';
+                videoContainer.classList.remove('playing');
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(err => {
+                    console.log(`Error entering fullscreen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        heroVideo.addEventListener('timeupdate', () => {
+            const progress = (heroVideo.currentTime / heroVideo.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeEl.textContent = formatTime(heroVideo.currentTime);
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            heroVideo.currentTime = percent * heroVideo.duration;
+        });
+
+        function initFloatingStickers() {
+            const container = document.getElementById('stickerContainer');
+            const emojis = ['💖', '✨', '🦋', '💜', '🔮', '🦄'];
+            for (let i = 0; i < 12; i++) {
+                const s = document.createElement('div');
+                s.className = 'sticker';
+                s.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                s.style.left = (Math.random() > 0.5 ? Math.random()*15 : 85 + Math.random()*10) + '%';
+                s.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(s);
+            }
+        }
+    </script>
+</body>
+</html>
