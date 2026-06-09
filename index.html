@@ -443,7 +443,7 @@
             padding: 15px 0 5px;
             color: #6d214f;
             font-family: 'Dancing Script', cursive;
-            font-size: 1.9rem;
+            font-size: 1.5rem;
             font-weight: bold;
             text-shadow: 1px 1px 0px rgba(255,255,255,0.6);
         }
@@ -505,7 +505,7 @@
             <div class="envelope-body">
                 <div class="open-btn">
                     <span class="hearts"></span>
-                    Open Me
+                    Unseal Me
                     <span class="hearts">🌸</span>
                 </div>
             </div>
@@ -579,42 +579,24 @@
                 <!-- 🎥 Pinned Video Tape Player Frame -->
                 <div class="youtube-player">
                     <div class="pin"></div>
-                    <div class="video-container" id="videoContainer">
-                        <video class="hero-video" id="heroVideo" muted loop playsinline preload="metadata">
+                    <div class="video-container playing" id="videoContainer">
+                        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="auto">
                             <source src="LESLY1.mp4" type="video/mp4">
                         </video>
-                        
-                        <button class="center-play-btn" onclick="toggleVideo()">▶️</button>
                         
                         <div class="video-title-overlay">
                             <h1 class="video-title">Kalos Kagathos</h1>
                         </div>
-                        
-                        <div class="video-controls">
-                            <div class="control-row">
-                                <button class="play-pause-btn" id="playPauseBtn" onclick="toggleVideo()">▶️</button>
-                                
-                                <div class="progress-container" id="progressContainer">
-                                    <div class="progress-bar" id="progressBar"></div>
-                                </div>
-                                
-                                <div class="time-display">
-                                    <span id="currentTime">0:00</span>
-                                </div>
-
-                                <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <div class="footer">
-                    Loving You Since ❤️
-                </div>
-            </div>
+                                <div class="footer">
+                                     The Soul Entwined To You❤️
+                                </div>
+                            </div>
 
-        </div>
-    </div>
+                        </div>
+                    </div>
 
     <script>
         function openEnvelope() {
