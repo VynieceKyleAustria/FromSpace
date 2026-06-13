@@ -489,39 +489,7 @@
                 padding: 8px;
             }
             <style>
-         /* =========================
-           FULLSCREEN PHOTO VIEWER
-            ========================= */
-            .image-viewer {
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.95);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 15px;
-                opacity: 0;
-                visibility: hidden;
-                transition: 0.3s ease;
-                z-index: 9999;
-            }
-            
-            .image-viewer.active {
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            .image-viewer img {
-                max-width: 95%;
-                max-height: 95%;
-                object-fit: contain;
-                border-radius: 12px;
-            }
-            
-            .card-media {
-                cursor: pointer;
-            }
-        }
+         
     </style>
 </head>
 <body>
@@ -607,10 +575,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Fullscreen Photo Viewer -->
-                <div class="image-viewer" id="imageViewer">
-                    <img id="viewerImage" src="" alt="">
-                </div>
+              
                 <!-- 🎥 Pinned Video Tape Player Frame -->
                 <div class="youtube-player">
                     <div class="pin"></div>
@@ -716,24 +681,6 @@
                 container.appendChild(s);
             }
         }
-                  /* =========================
-                       FULLSCREEN PHOTO VIEWER
-                    ========================= */
-        const imageViewer = document.getElementById('imageViewer');
-        const viewerImage = document.getElementById('viewerImage');
-        
-        document.querySelectorAll('.card-media').forEach(img => {
-            img.addEventListener('click', function() {
-                viewerImage.src = this.src;
-                imageViewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-        
-        imageViewer.addEventListener('click', () => {
-            imageViewer.classList.remove('active');
-            document.body.style.overflow = '';
-        });
         });                        
     </script>
 </body>
